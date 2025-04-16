@@ -28,7 +28,7 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:8.0-debian
+    image: mysql:lts
     container_name: ${DB_CONTAINER}
     ports:
       - "3306:3306"

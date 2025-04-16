@@ -13,3 +13,7 @@ build-compose:
 
 down-docker:
 	docker-compose --env-file .env -f ./docker/compose.yml down --remove-orphans
+
+# generate-jwt-secret generates jwt secret key with opennsl and writes it into .env file
+generate-jwt-secret:
+	./scripts/genjwt_secret.sh
