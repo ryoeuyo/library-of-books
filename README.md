@@ -18,10 +18,9 @@ RESTful API для управления электронной библиоте�
 | Docker         | 28.0.4 |
 
 ### Ключевые компоненты Symfony
-- API Platform
 - LexikJWTAuthenticationBundle
 - Doctrine ORM
-- Symfony Serializer
+- GesdinetJWTRefreshTokenBundle
 
 ## 🚀 Запуск проекта
 
