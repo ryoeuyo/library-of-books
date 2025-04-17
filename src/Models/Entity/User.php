@@ -1,40 +1,55 @@
 <?php
 
-namespace App\Entity;
+namespace App\Models\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+	#[Groups('user:read')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 32)]
-    private ?string $login = null;
+    #[ORM\Column(length: 32, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 8, max: 32)]
+	#[Groups('user:read')]
+	private ?string $login = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 8, max: 255)]
     private ?string $hash_password = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $registeredAt = null;
+    #[Assert\NotBlank]
+	#[Groups('user:read')]
+	private ?\DateTimeImmutable $registeredAt = null;
 
     /**
      * @var Collection<int, AllowedUser>
      */
     #[ORM\OneToMany(targetEntity: AllowedUser::class, mappedBy: 'owner')]
-    private Collection $allowedUsers;
+	#[Groups('user:read')]
+	private Collection $allowedUsers;
 
     /**
      * @var Collection<int, Book>
      */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'userId')]
-    private Collection $books;
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'user')]
+	#[Groups('user:read')]
+	private Collection $books;
 
     public function __construct()
     {
@@ -71,9 +86,9 @@ class User
         return $this->hash_password;
     }
 
-    public function setHashPassword(string $hash_password): static
+    public function setPassword(string $hash_password, UserPasswordHasherInterface $passwordHasher): static
     {
-        $this->hash_password = $hash_password;
+        $this->hash_password = $passwordHasher->hashPassword($this, $hash_password);
 
         return $this;
     }
@@ -149,4 +164,23 @@ class User
 
         return $this;
     }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->login;
+    }
+
+	public function getPassword(): ?string
+	{
+		return $this->hash_password;
+	}
 }

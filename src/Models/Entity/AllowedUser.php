@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Models\Entity;
 
 use App\Repository\AllowedUserRepository;
 use Doctrine\ORM\Mapping as ORM;

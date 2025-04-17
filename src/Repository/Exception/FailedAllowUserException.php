@@ -1,11 +1,11 @@
 <?php
 
-	namespace App\Repository\Exception;
+namespace App\Repository\Exception;
 
-	class FailedAllowUserException extends \Exception
-	{
-		public function __construct(string $message = "Failed to allow user")
-		{
-			parent::__construct($message);
-		}
-	}
+class FailedAllowUserException extends \RuntimeException
+{
+    public function __construct(string $message = 'Failed to allow user')
+    {
+        parent::__construct($message);
+    }
+}

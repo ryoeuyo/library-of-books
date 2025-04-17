@@ -2,11 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\AllowedUser;
-use App\Entity\Book;
-use App\Entity\User;
+use App\Mapper\BookMapper;
+use App\Models\DTO\BookListItem;
+use App\Models\Entity\AllowedUser;
+use App\Models\Entity\Book;
+use App\Models\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,13 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BookRepository extends ServiceEntityRepository
 {
-	private BookRepository $bookRepository;
-
-	public function __construct(ManagerRegistry $registry, BookRepository $bookRepository)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Book::class);
-		$this->bookRepository = $bookRepository;
-	}
+    }
 
     /**
      * @return Book[] Returns an array of $user books
@@ -28,17 +27,6 @@ class BookRepository extends ServiceEntityRepository
     public function findAllByUser(User $user): array
     {
 		return $this->findBy(['user' => $user, 'isDeleted' => false]);
-    }
-
-	public function findAllByUserId(int $id): array
-	{
-		$user = $this->getEntityManager()->getRepository(User::class)->find($id);
-
-		if (!$user) {
-			return [];
-		}
-
-		return $this->findAllByUser($user);
 	}
 
 	public function findOneById(int $id): ?Book
@@ -46,31 +34,47 @@ class BookRepository extends ServiceEntityRepository
 		return $this->find($id);
 	}
 
-	public function saveBook(Book $book): void
-	{
-		$this->getEntityManager()->persist($book);
-	}
+    /**
+     * @return Book[] Returns an array of books
+     */
+    public function findAllByUserId(int $id): array
+    {
+        $user = $this->getEntityManager()->getRepository(User::class)->find($id);
 
-	public function deleteBookById(int $id): void
-	{
-		$book = $this->bookRepository->find($id);
+        if (!$user) {
+            return [];
+        }
 
-		$this->getEntityManager()->remove($book);
+        return $this->findAllByUser($user);
+    }
+
+    public function saveBook(Book $book): void
+    {
+        $this->getEntityManager()->persist($book);
 		$this->getEntityManager()->flush();
-	}
+    }
 
-	public function findSharedBooks(int $userId, int $otherUserId): array
-	{
+    public function deleteBookById(int $id): void
+    {
+        $book = $this->find($id);
+
+        $this->getEntityManager()->remove($book);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @return Book[] Returns an array of other user books
+     */
+    public function findSharedBooks(int $userId, int $otherUserId): array
+    {
 		return $this->createQueryBuilder('b')
-			->join('b.user', 'owner')
-			->join(AllowedUser::class, 'au', 'WITH', 'au.owner = owner')
-			->where('au.allowedUser = :userId')
-			->andWhere('owner.id = :otherUserId')
-			->setParameters([
-				'userId' => $userId,
-				'otherUserId' => $otherUserId
-			])
+			->join('b.user', 'owner')  // Связь с владельцем книги
+			->join('owner.allowedUsers', 'au')  // Связь с разрешениями владельца
+			->where('au.allowed = :userId')  // Проверка что текущий пользователь есть в allowed
+			->andWhere('owner.id = :otherUserId')  // Книги принадлежат указанному пользователю
+			->setParameter('userId', $userId)
+			->setParameter('otherUserId', $otherUserId)
 			->getQuery()
 			->getResult();
-	}
+    }
 }

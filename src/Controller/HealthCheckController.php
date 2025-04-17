@@ -6,9 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/api/health')]
 class HealthCheckController extends AbstractController
 {
-    #[Route('/healthcheck', name: 'healthcheck')]
+    #[Route('/', name: 'healthcheck')]
     public function healthCheck(): Response
     {
         return $this->json([

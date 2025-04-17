@@ -7,6 +7,8 @@ RUN apk add --no-cache shadow && \
     groupmod -o -g ${PGID} www-data && \
     usermod -o -u ${PUID} -g www-data www-data
 
+USER www-data
+
 RUN apk add --no-cache \
     autoconf \
     libtool \

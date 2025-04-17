@@ -14,6 +14,9 @@ build-compose:
 down-docker:
 	docker-compose --env-file .env -f ./docker/compose.yml down --remove-orphans
 
+exec-php-container:
+	docker exec -it $(PHP_CONTAINER) bash
+
 # generate-jwt-secret generates jwt secret key with opennsl and writes it into .env file
 generate-jwt-secret:
 	./scripts/genjwt_secret.sh
