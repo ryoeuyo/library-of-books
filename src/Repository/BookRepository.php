@@ -2,13 +2,9 @@
 
 namespace App\Repository;
 
-use App\Mapper\BookMapper;
-use App\Models\DTO\BookListItem;
-use App\Models\Entity\AllowedUser;
 use App\Models\Entity\Book;
 use App\Models\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -26,13 +22,13 @@ class BookRepository extends ServiceEntityRepository
      */
     public function findAllByUser(User $user): array
     {
-		return $this->findBy(['user' => $user, 'isDeleted' => false]);
-	}
+        return $this->findBy(['user' => $user, 'isDeleted' => false]);
+    }
 
-	public function findOneById(int $id): ?Book
-	{
-		return $this->find($id);
-	}
+    public function findOneById(int $id): ?Book
+    {
+        return $this->find($id);
+    }
 
     /**
      * @return Book[] Returns an array of books
@@ -51,7 +47,7 @@ class BookRepository extends ServiceEntityRepository
     public function saveBook(Book $book): void
     {
         $this->getEntityManager()->persist($book);
-		$this->getEntityManager()->flush();
+        $this->getEntityManager()->flush();
     }
 
     public function deleteBookById(int $id): void
@@ -67,14 +63,14 @@ class BookRepository extends ServiceEntityRepository
      */
     public function findSharedBooks(int $userId, int $otherUserId): array
     {
-		return $this->createQueryBuilder('b')
-			->join('b.user', 'owner')  // Связь с владельцем книги
-			->join('owner.allowedUsers', 'au')  // Связь с разрешениями владельца
-			->where('au.allowed = :userId')  // Проверка что текущий пользователь есть в allowed
-			->andWhere('owner.id = :otherUserId')  // Книги принадлежат указанному пользователю
-			->setParameter('userId', $userId)
-			->setParameter('otherUserId', $otherUserId)
-			->getQuery()
-			->getResult();
+        return $this->createQueryBuilder('b')
+            ->join('b.user', 'owner')  // Связь с владельцем книги
+            ->join('owner.allowedUsers', 'au')  // Связь с разрешениями владельца
+            ->where('au.allowed = :userId')  // Проверка что текущий пользователь есть в allowed
+            ->andWhere('owner.id = :otherUserId')  // Книги принадлежат указанному пользователю
+            ->setParameter('userId', $userId)
+            ->setParameter('otherUserId', $otherUserId)
+            ->getQuery()
+            ->getResult();
     }
 }

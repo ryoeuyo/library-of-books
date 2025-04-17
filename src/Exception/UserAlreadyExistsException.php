@@ -6,18 +6,18 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class UserAlreadyExistsException extends \RuntimeException implements HttpExceptionInterface
 {
-	public function __construct(string $message = 'User already exists')
-	{
-		parent::__construct($message);
-	}
+    public function __construct(string $message = 'User already exists')
+    {
+        parent::__construct($message);
+    }
 
-	public function getStatusCode(): int
-	{
-		return 409;
-	}
+    public function getStatusCode(): int
+    {
+        return 409;
+    }
 
-	public function getHeaders(): array
-	{
-		return [];
-	}
+    public function getHeaders(): array
+    {
+        return [];
+    }
 }

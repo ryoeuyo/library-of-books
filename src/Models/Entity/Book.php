@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
 {
-	#[Groups(['book:read'])]
+    #[Groups(['book:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -20,26 +20,26 @@ class Book
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-	#[Groups(['book:read'])]
-	#[ORM\Column(length: 64)]
+    #[Groups(['book:read'])]
+    #[ORM\Column(length: 64)]
     private ?string $name = null;
 
-	#[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
-	#[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $url = null;
 
-	#[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-	#[ORM\Column]
+    #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-	#[ORM\Column]
+    #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-	#[ORM\Column(type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     private bool $isDeleted = false;
 
     public function getId(): ?int

@@ -16,21 +16,20 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 #[Route('api/user')]
 class UserController extends AbstractController
 {
-	#[Route('/get_all', name: 'api_all_users', methods: ['GET'])]
-	public function getAllUsers(UserRepository $userRepository): Response
-	{
-		return $this->json([
-			'users' => $userRepository->findAll(),
-		], context: ['groups' => ['user:read']]);
-	}
+    #[Route('/get_all', name: 'api_all_users', methods: ['GET'])]
+    public function getAllUsers(UserRepository $userRepository): Response
+    {
+        return $this->json([
+            'users' => $userRepository->findAll(),
+        ], context: ['groups' => ['user:read']]);
+    }
 
-	#[Route('/me', name: 'api_user_me', methods: ['GET'])]
-	public function me(
-		#[CurrentUser] User $user,
-		UserMapper $userMapper,
-		BookMapper $bookMapper
-	) : Response
-	{
-		return $this->json($userMapper->toDTO($user, $bookMapper));
-	}
+    #[Route('/me', name: 'api_user_me', methods: ['GET'])]
+    public function me(
+        #[CurrentUser] User $user,
+        UserMapper $userMapper,
+        BookMapper $bookMapper,
+    ): Response {
+        return $this->json($userMapper->toDTO($user, $bookMapper));
+    }
 }

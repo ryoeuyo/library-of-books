@@ -18,14 +18,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-	#[Groups('user:read')]
+    #[Groups('user:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 32, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 8, max: 32)]
-	#[Groups('user:read')]
-	private ?string $login = null;
+    #[Groups('user:read')]
+    private ?string $login = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -34,22 +34,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Assert\NotBlank]
-	#[Groups('user:read')]
-	private ?\DateTimeImmutable $registeredAt = null;
+    #[Groups('user:read')]
+    private ?\DateTimeImmutable $registeredAt = null;
 
     /**
      * @var Collection<int, AllowedUser>
      */
     #[ORM\OneToMany(targetEntity: AllowedUser::class, mappedBy: 'owner')]
-	#[Groups('user:read')]
-	private Collection $allowedUsers;
+    #[Groups('user:read')]
+    private Collection $allowedUsers;
 
     /**
      * @var Collection<int, Book>
      */
     #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'user')]
-	#[Groups('user:read')]
-	private Collection $books;
+    #[Groups('user:read')]
+    private Collection $books;
 
     public function __construct()
     {
@@ -179,8 +179,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->login;
     }
 
-	public function getPassword(): ?string
-	{
-		return $this->hash_password;
-	}
+    public function getPassword(): ?string
+    {
+        return $this->hash_password;
+    }
 }

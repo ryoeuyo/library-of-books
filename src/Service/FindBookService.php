@@ -9,46 +9,47 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class FindBookService
 {
-	public function __construct()
-	{}
+    public function __construct()
+    {
+    }
 
-	public function FindBook(string $query) : array
-	{
-		$client = new Client();
-		try {
-			$response = $client->get('https://www.googleapis.com/books/v1/volumes?q=' . $query);
-		} catch (GuzzleException $e) {
-			throw new FailedFindBookException('Failed to fetch Google books: ' . $e->getMessage());
-		}
+    public function FindBook(string $query): array
+    {
+        $client = new Client();
+        try {
+            $response = $client->get('https://www.googleapis.com/books/v1/volumes?q='.$query);
+        } catch (GuzzleException $e) {
+            throw new FailedFindBookException('Failed to fetch Google books: '.$e->getMessage());
+        }
 
-		$data = json_decode((string)$response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true);
 
-		if (!isset($data['items'])) {
-			return [];
-		}
+        if (!isset($data['items'])) {
+            return [];
+        }
 
-		$foundBooks = [];
+        $foundBooks = [];
 
-		foreach ($data['items'] as $item) {
-			if (!isset($item['volumeInfo']['title'])) {
-				continue;
-			}
+        foreach ($data['items'] as $item) {
+            if (!isset($item['volumeInfo']['title'])) {
+                continue;
+            }
 
-			if (!isset($item['selfLink'])) {
-				continue;
-			}
+            if (!isset($item['selfLink'])) {
+                continue;
+            }
 
-			if (!isset($item['volumeInfo']['description'])) {
-				continue;
-			}
+            if (!isset($item['volumeInfo']['description'])) {
+                continue;
+            }
 
-			$foundBooks[] = new FindedBooksDTO(
-				$item['volumeInfo']['title'],
-				$item['volumeInfo']['description'],
-				$item['selfLink'],
-			);
-		}
+            $foundBooks[] = new FindedBooksDTO(
+                $item['volumeInfo']['title'],
+                $item['volumeInfo']['description'],
+                $item['selfLink'],
+            );
+        }
 
-		return $foundBooks;
-	}
+        return $foundBooks;
+    }
 }

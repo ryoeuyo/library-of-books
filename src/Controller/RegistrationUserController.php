@@ -14,16 +14,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/auth')]
 class RegistrationUserController extends AbstractController
 {
-	public function __construct(private readonly RegisterUserService $registerUserService)
-	{
-	}
+    public function __construct(private readonly RegisterUserService $registerUserService)
+    {
+    }
 
     #[Route('/register', name: 'api_register', methods: ['POST'])]
     public function register(
-		#[RequestAttribute] RegisterRequest $request
+        #[RequestAttribute] RegisterRequest $request,
     ): Response {
-		return $this->json([
-			'user_id' => $this->registerUserService->registerUser($request),
-		]);
+        return $this->json([
+            'user_id' => $this->registerUserService->registerUser($request),
+        ]);
     }
 }
