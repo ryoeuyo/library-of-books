@@ -19,6 +19,8 @@ services:
       args:
         - PHP_CONTAINER=${PHP_CONTAINER}
         - INSTALL_XDEBUG=${INSTALL_XDEBUG}
+        - PGID=${id -g}
+        - PUID=${id -u}
       dockerfile: Dockerfile
     container_name: ${PHP_CONTAINER}
     volumes:

@@ -64,10 +64,10 @@ class BookRepository extends ServiceEntityRepository
     public function findSharedBooks(int $userId, int $otherUserId): array
     {
         return $this->createQueryBuilder('b')
-            ->join('b.user', 'owner')  // Связь с владельцем книги
-            ->join('owner.allowedUsers', 'au')  // Связь с разрешениями владельца
-            ->where('au.allowed = :userId')  // Проверка что текущий пользователь есть в allowed
-            ->andWhere('owner.id = :otherUserId')  // Книги принадлежат указанному пользователю
+            ->join('b.user', 'owner')
+            ->join('owner.allowedUsers', 'au')
+            ->where('au.allowed = :userId')
+            ->andWhere('owner.id = :otherUserId')
             ->setParameter('userId', $userId)
             ->setParameter('otherUserId', $otherUserId)
             ->getQuery()

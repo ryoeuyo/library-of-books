@@ -11,9 +11,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final readonly class CreateBookService
 {
-    public function __construct(private BookRepository $bookRepository)
-    {
-    }
+    public function __construct(private BookRepository $bookRepository) {}
 
     public function createBook(CreateBookRequest $request, User $user): int
     {
@@ -34,16 +32,16 @@ final readonly class CreateBookService
                     throw new BookFileException('File content is empty');
                 }
             } catch (\Exception $e) {
-                throw new BookFileException('File read error: '.$e->getMessage());
+                throw new BookFileException('File read error: ' . $e->getMessage());
             }
         }
 
         $book = (new Book())
-        ->setName($request->getTitle())
-        ->setContent($content)
-        ->setUser($user)
-        ->setCreatedAt(new \DateTimeImmutable())
-        ->setUpdatedAt(new \DateTimeImmutable());
+            ->setName($request->getTitle())
+            ->setContent($content)
+            ->setUser($user)
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setUpdatedAt(new \DateTimeImmutable());
 
         $this->bookRepository->saveBook($book);
 

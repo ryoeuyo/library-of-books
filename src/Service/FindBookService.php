@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Exception\FailedFindBookException;
-use App\Models\DTO\FindedBooksDTO;
+use App\Models\DTO\FoundedBooksDTO;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -43,7 +43,7 @@ class FindBookService
                 continue;
             }
 
-            $foundBooks[] = new FindedBooksDTO(
+            $foundBooks[] = new FoundedBooksDTO(
                 $item['volumeInfo']['title'],
                 $item['volumeInfo']['description'],
                 $item['selfLink'],
